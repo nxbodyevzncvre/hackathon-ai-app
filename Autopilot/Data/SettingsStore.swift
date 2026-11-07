@@ -13,13 +13,13 @@ final class SettingsStore {
     static let quietStartDefault = 1320 // 22:00
     static let quietEndDefault = 480 // 08:00
 
-    var workdayStartMinutes: Int
-    var workdayEndMinutes: Int
-    var dailyCapacityMinutes: Int
-    var briefingMinutes: Int
-    var notificationsEnabled: Bool
-    var quietStartMinutes: Int
-    var quietEndMinutes: Int
+    var workdayStartMinutes: Int { didSet { persist() } }
+    var workdayEndMinutes: Int { didSet { persist() } }
+    var dailyCapacityMinutes: Int { didSet { persist() } }
+    var briefingMinutes: Int { didSet { persist() } }
+    var notificationsEnabled: Bool { didSet { persist() } }
+    var quietStartMinutes: Int { didSet { persist() } }
+    var quietEndMinutes: Int { didSet { persist() } }
 
     let timeZone: TimeZone
 

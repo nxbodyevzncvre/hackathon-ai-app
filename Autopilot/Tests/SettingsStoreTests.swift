@@ -35,4 +35,25 @@ final class SettingsStoreTests: XCTestCase {
         XCTAssertEqual(reloaded.briefingMinutes, 540)
         XCTAssertTrue(reloaded.notificationsEnabled)
     }
+
+    /// RED first: plain mutation must persist with no explicit persist()
+    /// call, otherwise any view binding that forgets to call persist()
+    /// silently loses the change (this is how the time pickers regressed).
+    func testAnyPropertyMutationPersistsWithoutExplicitSave() throws {
+        let defaults = try makeDefaults(name: "mutation-persist-check")
+        let store = SettingsStore(defaults: defaults)
+        store.dailyCapacityMinutes = 330
+        store.workdayEndMinutes = 1110
+        store.notificationsEnabled = true
+        store.quietStartMinutes = 1380
+        store.quietEndMinutes = 420
+        // No persist() call — every mutation must already be durable.
+
+        let reloaded = SettingsStore(defaults: defaults)
+        XCTAssertEqual(reloaded.dailyCapacityMinutes, 330)
+        XCTAssertEqual(reloaded.workdayEndMinutes, 1110)
+        XCTAssertTrue(reloaded.notificationsEnabled)
+        XCTAssertEqual(reloaded.quietStartMinutes, 1380)
+        XCTAssertEqual(reloaded.quietEndMinutes, 420)
+    }
 }

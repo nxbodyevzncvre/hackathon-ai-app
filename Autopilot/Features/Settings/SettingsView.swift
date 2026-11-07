@@ -18,21 +18,9 @@ struct SettingsView: View {
                     VStack(spacing: 0) {
                         capacityRow
                         Divider().overlay(Color.border)
-                        MinutePickerRow(
-                            title: "Workday starts",
-                            minutes: Binding(
-                                get: { settings.workdayStartMinutes },
-                                set: { settings.workdayStartMinutes = $0; settings.persist() }
-                            )
-                        )
+                        MinutePickerRow(title: "Workday starts", minutes: $settings.workdayStartMinutes)
                         Divider().overlay(Color.border)
-                        MinutePickerRow(
-                            title: "Workday ends",
-                            minutes: Binding(
-                                get: { settings.workdayEndMinutes },
-                                set: { settings.workdayEndMinutes = $0; settings.persist() }
-                            )
-                        )
+                        MinutePickerRow(title: "Workday ends", minutes: $settings.workdayEndMinutes)
                     }
                     .surfaceCard()
                 }
@@ -40,10 +28,7 @@ struct SettingsView: View {
                 VStack(alignment: .leading, spacing: Theme.Space.s12) {
                     SectionHeader(title: "Notifications")
                     VStack(spacing: 0) {
-                        Toggle(isOn: Binding(
-                            get: { settings.notificationsEnabled },
-                            set: { settings.notificationsEnabled = $0; settings.persist() }
-                        )) {
+                        Toggle(isOn: $settings.notificationsEnabled) {
                             VStack(alignment: .leading, spacing: Theme.Space.s4) {
                                 Text("Reminders and briefing")
                                     .typeStyle(.taskTitle)
@@ -53,29 +38,11 @@ struct SettingsView: View {
                         }
                         .padding(Theme.Space.s16)
                         Divider().overlay(Color.border)
-                        MinutePickerRow(
-                            title: "Briefing time",
-                            minutes: Binding(
-                                get: { settings.briefingMinutes },
-                                set: { settings.briefingMinutes = $0; settings.persist() }
-                            )
-                        )
+                        MinutePickerRow(title: "Briefing time", minutes: $settings.briefingMinutes)
                         Divider().overlay(Color.border)
-                        MinutePickerRow(
-                            title: "Quiet hours start",
-                            minutes: Binding(
-                                get: { settings.quietStartMinutes },
-                                set: { settings.quietStartMinutes = $0; settings.persist() }
-                            )
-                        )
+                        MinutePickerRow(title: "Quiet hours start", minutes: $settings.quietStartMinutes)
                         Divider().overlay(Color.border)
-                        MinutePickerRow(
-                            title: "Quiet hours end",
-                            minutes: Binding(
-                                get: { settings.quietEndMinutes },
-                                set: { settings.quietEndMinutes = $0; settings.persist() }
-                            )
-                        )
+                        MinutePickerRow(title: "Quiet hours end", minutes: $settings.quietEndMinutes)
                     }
                     .surfaceCard()
                 }
@@ -140,7 +107,7 @@ struct SettingsView: View {
             Slider(
                 value: Binding(
                     get: { Double(settings.dailyCapacityMinutes) },
-                    set: { settings.dailyCapacityMinutes = Int($0); settings.persist() }
+                    set: { settings.dailyCapacityMinutes = Int($0) }
                 ),
                 in: 30...480,
                 step: 15

@@ -21,6 +21,7 @@ xcodebuild -scheme Autopilot -destination 'platform=iOS Simulator,name=iPhone 16
 Never report "done" from a code read alone.
 
 ## Code rules
+- **TDD is mandatory.** No feature or bugfix lands without a failing test written first (`red → green → full suite`). UI stays thin; behavior lives in testable stores/services/parsers, and every milestone comes with tests proving its DoD.
 - Strict concurrency on. `@MainActor` for UI mutation; network and parsing off the main actor. Services are `Sendable`.
 - Views never touch `@Model` objects; `ActionRepository` is the only SwiftData caller; views see `Action` value types.
 - `@Observable` view models, one per screen, injected via `@Environment`. Only `NotificationScheduler` may be process-wide.
