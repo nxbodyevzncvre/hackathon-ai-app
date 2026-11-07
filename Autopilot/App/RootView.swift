@@ -5,10 +5,15 @@ enum AppTab: Hashable {
 }
 
 struct RootView: View {
+    @Environment(AppEnvironment.self) private var environment
+
     @State private var tab: AppTab
     @State private var isCapturePresented: Bool
+    /// Re-injected after init so mocks/fixtures can differ per launch args later.
+    private let showCaptureByDefault: Bool
 
-    init() {
+    init(showCaptureByDefault: Bool = false) {
+        self.showCaptureByDefault = showCaptureByDefault
         // Screenshot verification hooks: `-autopilot-tab-<name>` picks the tab,
         // `-autopilot-show-capture` opens the capture sheet at launch.
         let args = ProcessInfo.processInfo.arguments
@@ -22,11 +27,20 @@ struct RootView: View {
         }
         _tab = State(initialValue: initial)
         _isCapturePresented = State(
-            initialValue: args.contains("-autopilot-show-capture")
+            initialValue: showCaptureByDefault || args.contains("-autopilot-show-capture")
         )
     }
 
     var body: some View {
+        if let repository = environment.repository {
+            tabs
+                .environment(repository)
+        } else {
+            storageUnavailableView
+        }
+    }
+
+    private var tabs: some View {
         TabView(selection: $tab) {
             TodayView(onCapture: openCapture)
                 .tabItem { Label("Today", systemImage: "sun.max") }
@@ -41,7 +55,9 @@ struct RootView: View {
                 .tag(AppTab.settings)
         }
         .tint(Color.text)
-        .overlay(alignment: .bottomTrailing) { captureButton }
+        .overlay(alignment: .bottomTrailing) {
+            if !isCapturePresented { captureButton }
+        }
         .sheet(isPresented: $isCapturePresented) { CaptureView() }
     }
 
@@ -60,5 +76,18 @@ struct RootView: View {
         .accessibilityIdentifier("capture-button")
         .padding(.trailing, Theme.Space.s20)
         .padding(.bottom, Theme.Space.s88)
+    }
+
+    /// Honest degradation instead of a crash when SwiftData cannot start.
+    private var storageUnavailableView: some View {
+        VStack {
+            EmptyState(
+                icon: "externaldrive.badge.exclamationmark",
+                title: "Local storage unavailable",
+                message: "The database could not be opened on this device, so AUTOPILOT cannot store actions. Nothing was lost on purpose — the app shows this screen instead of risking your data."
+            )
+            .padding(.horizontal, Theme.Screen.hPadding)
+        }
+        .background(Color.bg)
     }
 }

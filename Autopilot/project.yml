@@ -17,6 +17,11 @@ targets:
       - path: .
         excludes:
           - "Tests/**"
+          - ".shots/**"
+          - "*.xcodeproj/**"
+          - "**/*.png"
+          - "project.yml"
+          - "*.md"
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: dev.autopilot.ios
