@@ -14,5 +14,12 @@ One line each. Every assumption made to remove ambiguity without asking.
 - Notification "stable identifier per action + offset" = `uuidstring + "-24h"/"-1h"`, so reschedule means cancel-by-id then re-add.
 - The Worker source lives in `ProxyWorker/` inside this repo for versioning but is excluded from the iOS target and deployed separately; `.env` at repo root is gitignored from day one.
 - Toast Undo lifetime: 5 s, single-level undo (delete last created batch), implemented in `RootView` toast host.
+- Toolchain is Xcode 26.6, which has no bare "iPhone 16" simulator; the build destination is `platform=iOS Simulator,name=iPhone 16 Pro` (min target stays iOS 17.0).
+- Repo git history starts with the Phase A docs commit; ProxyWorker is committed to the repo but excluded from the iOS target and `.env` is ignored from the first commit.
+- APPROVED: M3 is stub-first — no external proxy dependency; `ExtractionService.Live` ships flag-off and the offline heuristic path is the only active pipeline for the MVP.
+- APPROVED: free limits are hard-enforced in release builds only; DEBUG builds bypass the cap and get a "Reset limits" button in Settings so rehearsal is never blocked.
+- APPROVED: natural-language task edit runs on the StubTaskEditService (deterministic command parser); a live proxy implementation is coded for M3+ but kept flag-off like extraction.
+- APPROVED: M6 ships a local signed archive; no TestFlight/App Store Connect upload, no Team/bundle-id provisioning work.
+- APPROVED: voice capture is cut from this MVP entirely; Capture sheet is text-only with no dead mic button.
 - Deleting all data also cancels all pending notifications and deletes the Keychain device token.
 - "Deliverable: 5 questions max" — batched below.
