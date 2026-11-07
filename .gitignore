@@ -14,3 +14,7 @@ build/
 # Swift package
 .build/
 .swiftpm/
+
+# screenshots
+Autopilot/.shots/
+Autopilot/*.xcodeproj

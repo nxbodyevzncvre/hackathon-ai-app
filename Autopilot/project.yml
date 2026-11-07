@@ -1,0 +1,47 @@
+name: Autopilot
+options:
+  bundleIdPrefix: dev.autopilot
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    GENERATE_INFOPLIST_FILE: YES
+    DEVELOPMENT_LANGUAGE: en
+targets:
+  Autopilot:
+    type: application
+    platform: iOS
+    sources:
+      - path: .
+        excludes:
+          - "Tests/**"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.autopilot.ios
+        PRODUCT_NAME: Autopilot
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
+        INFOPLIST_KEY_UIUserInterfaceStyle: Automatic
+  AutopilotTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.autopilot.ios.tests
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/Autopilot.app/Autopilot
+        BUNDLE_LOADER: $(TEST_HOST)
+schemes:
+  Autopilot:
+    build:
+      targets:
+        Autopilot: all
+        AutopilotTests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets: [AutopilotTests]
